@@ -1,4 +1,5 @@
 import json
+from sqlite3 import Cursor
 from flask import Blueprint, request
 from flask_cors import cross_origin
 from marshmallow import Schema, fields
@@ -7,18 +8,20 @@ from jerry.db import get_db
 
 
 class CustomerSchema(Schema):
-    id = fields.Integer()
     phone_no = fields.Str()
     name = fields.Str()
     address = fields.Str()
+    state = fields.Str()
+    pincode = fields.Str()
 
 
 class Customer:
-    def __init__(self, id, phone_no, name, address):
-        self.id = id
+    def __init__(self, phone_no, name, address, state, pincode):
         self.phone_no = phone_no
         self.name = name
         self.address = address
+        self.state = state
+        self.pincode = pincode
 
     def __repr__(self):
         return "<Customer(name={self.name!r})>".format(self=self)
@@ -46,21 +49,24 @@ def getAll():
     jsonRes = []
     schema = CustomerSchema()
     for row in rows:
-        jsonRes.append(schema.dump(Customer(row[0], row[1], row[2], row[3])))
+        jsonRes.append(schema.dump(Customer(row[0], row[1], row[2], row[3], row[4])))
     return json.dumps(jsonRes)
 
-def addCustomer(c: Customer):
-    db = get_db().cursor()
-    db.execute(
-        'INSERT INTO customer(phone_no, name, address) VALUES (?, ?, ?)',
-        (c.phone_no, c.name, c.address))
+def addCustomer(cur: Cursor, c: Customer):
+    for row in cur.execute(
+        'INSERT INTO customer(phone_no, name, address, state, pincode) VALUES (?, ?, ?, ?, ?)',
+        (c.phone_no, c.name, c.address, c.state, c.pincode)):
+        
+        last_inserted_id = row[0]
+    return last_inserted_id
     
     
 @bp.route('', methods=['POST'])
 @cross_origin()
 @require_auth(None)
 def addOne():
-    id = addCustomer(Customer(0, request.json.get('phone_no'), request.json.get('name'), request.json.get('address')))
+    cur = get_db().cursor()
+    id = addCustomer(cur, Customer(request.json.get('phone_no'), request.json.get('name'), request.json.get('address'), request.json.get('state'), request.json.get('pincode')))
     return {}
 
 
