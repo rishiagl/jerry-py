@@ -66,12 +66,14 @@ CREATE TABLE IF NOT EXISTS transaction_metadata (
     FOREIGN KEY(company_name) REFERENCES company(name) ON DELETE RESTRICT
 );
 
-INSERT INTO transaction_metadata(type, company_name, prefix, last_inserted_id) VALUES('My Choice', 'invoice', 'inv', '0');
-INSERT INTO transaction_metadata(type, company_name, prefix, last_inserted_id) VALUES('Synergy Limited', 'invoice', 'inv', '0');
+INSERT INTO transaction_metadata(type, company_name, prefix, last_inserted_id) VALUES('invoice', 'My Choice', 'inv', '1');
+INSERT INTO transaction_metadata(type, company_name, prefix, last_inserted_id) VALUES('invoice', 'Synergy Limited', 'inv', '0');
 
 DROP TABLE invoice;
 CREATE TABLE IF NOT EXISTS invoice (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    invoice_no INTEGER NOt NULL,
+    company_name TEXT NOT NULL,
     date_created TEXT NOT NULL,
     customer_phone_no INTEGER NOT NULL,
     taxable_value INTEGER NOT NULL,
@@ -84,20 +86,24 @@ CREATE TABLE IF NOT EXISTS invoice (
     finance_duration_in_months INTEGER,
     dp INTEGER,
     emi INTEGER,
+    narration TEXT,
     is_cancelled INTEGER NOT NULL,
+    UNIQUE(company_name, invoice_no),
     FOREIGN KEY(customer_phone_no) REFERENCES customer(phone_no) ON DELETE RESTRICT
 );
-INSERT INTO invoice(date_created, customer_phone_no, taxable_value, cgst, sgst, igst, amount, amount_paid, finance_name, finance_duration_in_months, dp, emi, is_cancelled) VALUES('2023-09-16', '7970460076', 10000, 900, 900, 0, 11800, 10000, 'Bajaj Finance', 2800, 1000, 10, 0);
+INSERT INTO invoice(invoice_no, company_name, date_created, customer_phone_no, taxable_value, cgst, sgst, igst, amount, amount_paid, finance_name, finance_duration_in_months, dp, emi, narration, is_cancelled) VALUES('1', 'My Choice', '2023-09-16', '7970460076', 10000, 900, 900, 0, 11800, 10000, 'Bajaj Finance', 2800, 1000, 10, 'New Narration', 0);
 
-DROP TABLE invoice_item_list;
-CREATE TABLE IF NOT EXISTS invoice_item_list (
+DROP TABLE invoice_product;
+CREATE TABLE IF NOT EXISTS invoice_product (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    invoice_id INTEGER NOT NULL,
+    company_name TEXT NOT NULL,
+    invoice_no INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
+    description TEXT,
     qty INTEGER NOT NULL,
     rate INTEGER NOT NULL,
-    UNIQUE(invoice_id, product_id)
-    FOREIGN KEY(invoice_id) REFERENCES invoice(id) ON DELETE RESTRICT,
+    UNIQUE(company_name, invoice_no, product_id)
+    FOREIGN KEY(invoice_no) REFERENCES invoice(id) ON DELETE RESTRICT,
     FOREIGN KEY(product_id) REFERENCES product(id) ON DELETE RESTRICT
 );
-INSERT INTO invoice_item_list(invoice_id, product_id, qty, rate) VALUES(1, 1, 2, 5000);
+INSERT INTO invoice_product(company_name, invoice_no, product_id, description, qty, rate) VALUES('My Choice', 1, 1, 'a des', 2, 5000);
