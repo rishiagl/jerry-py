@@ -3,7 +3,7 @@ import os
 import sys
 
 from dotenv import load_dotenv, find_dotenv
-from flask import Flask, jsonify, g
+from flask import Flask, jsonify,  g
 
 from flask import has_request_context, request
 from flask.logging import default_handler
@@ -75,5 +75,9 @@ def create_app(test_config=None):
     
     from . import product
     app.register_blueprint(product.bp)
+    
+    from . import invoice
+    app.register_blueprint(invoice.bp)
+    
     CORS(app, origins=['http://localhost:5173',])
     return app
