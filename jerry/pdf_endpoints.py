@@ -32,6 +32,8 @@ class Item:
         self.invoiceProduct = invoiceProduct
         
 @bp.route('/invoice', methods=['POST'])
+@cross_origin()
+@require_auth(None)
 def getInvoicePdf():
     invoice_no = request.json.get('invoice_no')
     company_name = request.json.get('company_name')
