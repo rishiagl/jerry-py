@@ -1,5 +1,5 @@
-./jerry.sqlite
-./api.log
+jerry.sqlite
+api.log
 
-./jerry/__pycache__/
-./jerry/pdf/__pycache__/
+jerry/__pycache__/
+jerry/pdf/__pycache__/
