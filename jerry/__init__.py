@@ -79,5 +79,8 @@ def create_app(test_config=None):
     from . import invoice
     app.register_blueprint(invoice.bp)
     
+    from . import pdf_endpoints
+    app.register_blueprint(pdf_endpoints.bp)
+    
     CORS(app, origins=['http://localhost:5173',])
     return app

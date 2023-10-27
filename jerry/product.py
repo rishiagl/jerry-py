@@ -37,6 +37,10 @@ validator = Auth0JWTBearerTokenValidator(
 )
 require_auth.register_token_validator(validator)
 
+def getProductByID(cur: Cursor, id: int):
+    row = cur.execute('SELECT * FROM product where id=?', (id,)).fetchone()
+    return Product(row[0], row[1], row[2], row[3])
+
 @bp.route('', methods=['GET'])
 @require_auth(None)
 def getAll():

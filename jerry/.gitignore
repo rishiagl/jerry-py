@@ -1,2 +1,5 @@
 ./jerry.sqlite
 ./api.log
+
+./jerry/__pycache__/
+./jerry/pdf/__pycache__/

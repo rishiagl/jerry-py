@@ -10,7 +10,7 @@ from jerry.db import get_db
 class InvoiceProductSchema(Schema):
     id = fields.Integer()
     company_name = fields.Str()
-    invoice_no  = fields.Integer()
+    invoice_no  = fields.Str()
     product_id = fields.Integer()
     description = fields.Str()
     qty = fields.Integer()

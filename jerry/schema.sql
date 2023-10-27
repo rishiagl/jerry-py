@@ -72,7 +72,7 @@ INSERT INTO transaction_metadata(type, company_name, prefix, last_inserted_id) V
 DROP TABLE invoice;
 CREATE TABLE IF NOT EXISTS invoice (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    invoice_no INTEGER NOt NULL,
+    invoice_no TEXT NOt NULL,
     company_name TEXT NOT NULL,
     date_created TEXT NOT NULL,
     customer_phone_no INTEGER NOT NULL,
@@ -91,13 +91,13 @@ CREATE TABLE IF NOT EXISTS invoice (
     UNIQUE(company_name, invoice_no),
     FOREIGN KEY(customer_phone_no) REFERENCES customer(phone_no) ON DELETE RESTRICT
 );
-INSERT INTO invoice(invoice_no, company_name, date_created, customer_phone_no, taxable_value, cgst, sgst, igst, amount, amount_paid, finance_name, finance_duration_in_months, dp, emi, narration, is_cancelled) VALUES('1', 'My Choice', '2023-09-16', '7970460076', 10000, 900, 900, 0, 11800, 10000, 'Bajaj Finance', 2800, 1000, 10, 'New Narration', 0);
+INSERT INTO invoice(invoice_no, company_name, date_created, customer_phone_no, taxable_value, cgst, sgst, igst, amount, amount_paid, finance_name, finance_duration_in_months, dp, emi, narration, is_cancelled) VALUES('INV1', 'My Choice', '2023-09-16', '7970460076', 10000, 900, 900, 0, 11800, 10000, 'Bajaj Finance', 2800, 1000, 10, 'New Narration', 0);
 
 DROP TABLE invoice_product;
 CREATE TABLE IF NOT EXISTS invoice_product (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     company_name TEXT NOT NULL,
-    invoice_no INTEGER NOT NULL,
+    invoice_no TEXT NOT NULL,
     product_id INTEGER NOT NULL,
     description TEXT,
     qty INTEGER NOT NULL,
@@ -106,4 +106,4 @@ CREATE TABLE IF NOT EXISTS invoice_product (
     FOREIGN KEY(invoice_no) REFERENCES invoice(id) ON DELETE RESTRICT,
     FOREIGN KEY(product_id) REFERENCES product(id) ON DELETE RESTRICT
 );
-INSERT INTO invoice_product(company_name, invoice_no, product_id, description, qty, rate) VALUES('My Choice', 1, 1, 'a des', 2, 5000);
+INSERT INTO invoice_product(company_name, invoice_no, product_id, description, qty, rate) VALUES('My Choice', 'INV1', 1, 'a des', 2, 5000);

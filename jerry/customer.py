@@ -39,6 +39,18 @@ validator = Auth0JWTBearerTokenValidator(
 )
 require_auth.register_token_validator(validator)
 
+def addCustomer(cur: Cursor, c: Customer):
+    for row in cur.execute(
+        'INSERT INTO customer(phone_no, name, address, state, pincode) VALUES (?, ?, ?, ?, ?)',
+        (c.phone_no, c.name, c.address, c.state, c.pincode)):
+        
+        last_inserted_id = row[0]
+    return last_inserted_id
+
+def getCustomerByPhoneNo(cur: Cursor, phone_no: str):
+    row = cur.execute('SELECT * FROM customer where phone_no = ?', {phone_no}).fetchone()
+    return Customer(row[0], row[1], row[2], row[3], row[4])
+
 @bp.route('', methods=['GET'])
 @require_auth(None)
 def getAll():
@@ -51,14 +63,6 @@ def getAll():
     for row in rows:
         jsonRes.append(schema.dump(Customer(row[0], row[1], row[2], row[3], row[4])))
     return json.dumps(jsonRes)
-
-def addCustomer(cur: Cursor, c: Customer):
-    for row in cur.execute(
-        'INSERT INTO customer(phone_no, name, address, state, pincode) VALUES (?, ?, ?, ?, ?)',
-        (c.phone_no, c.name, c.address, c.state, c.pincode)):
-        
-        last_inserted_id = row[0]
-    return last_inserted_id
     
     
 @bp.route('', methods=['POST'])

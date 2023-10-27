@@ -12,7 +12,7 @@ from jerry.db import get_db
 
 class InvoiceSchema(Schema):
     id = fields.Integer()
-    invoice_no = fields.Integer()
+    invoice_no = fields.Str()
     company_name = fields.Str()
     date_created = fields.Str()
     customer_phone_no = fields.Integer()
@@ -73,6 +73,10 @@ def addInvoice(cur: Cursor, i: Invoice):
         (i.invoice_no, i.company_name, i.date_created, i.customer_phone_no, i.taxable_value, i.cgst, i.sgst, i.igst, i.amount, i.amount_paid, i.finance_name, i.finance_duration_in_months, i.dp, i.emi, i.narration, i.is_cancelled)):
         last_inserted_id = row[0]
     return last_inserted_id
+
+def getOneInvoice(cur: Cursor, invoice_no: str, company_name: str):
+    row = cur.execute('SELECT * FROM invoice where invoice_no = ? AND company_name = ?', (invoice_no, company_name)).fetchone()
+    return Invoice(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16])
     
     
 @bp.route('', methods=['POST'])
@@ -85,15 +89,16 @@ def addOne():
     cur = get_db().cursor()
     cur.execute('BEGIN')
     tm = getTransaction_metadata(cur, 'invoice', company.get('name'))
-    invoice_no = tm.last_inserted_id + 1
-    tm.last_inserted_id = invoice_no
-    updateTransaction_metadata(cur, tm)
+    inv_no = tm.last_inserted_id + 1
+    tm.last_inserted_id = inv_no
+    updateTransaction_metadata(cur, tm) 
+    invoice_no = "" + tm.prefix + str(inv_no)
     inv.invoice_no = invoice_no
     invoice_id = addInvoice(cur, inv)
     for item in request.json.get('item_list'):
         product = item.get('product')
         addInvoiceProduct(cur, InvoiceProduct(0, invoice_no, company.get('name'), product.get('id'), item.get('description'), item.get('qty'), item.get('rate')))
     cur.execute('COMMIT')
-    return {}
+    return {'invoice_no': invoice_no}
 
 

@@ -69,7 +69,18 @@ def addCompany(cursor: Cursor, c: Company):
         (c.name, c.legal_name, c.address, c.city, c.state, c.pincode, c.gstn, c.phone_no, c.email, c.website, c.bank_name, c.account_no, c.ifsc_code, c.upi_id, c.owner_email)):
         last_insert_id = row[0]
     return last_insert_id
-    
+
+def getCompanyByID(cursor: Cursor, id: str):
+    row = cursor.execute(
+        'SELECT * FROM company where id=?', (id,)
+    ).fetchone()
+    return Company(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15])
+
+def getCompanyByName(cursor: Cursor, company_name: str):
+    row = cursor.execute(
+        'SELECT * FROM company where name=?', (company_name,)
+    ).fetchone()
+    return Company(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15])
     
 @bp.route('', methods=['POST'])
 @cross_origin()
@@ -87,14 +98,8 @@ def addOne():
 @cross_origin()
 @require_auth(None)
 def getById(id):
-    db = get_db().cursor()
-    rows = db.execute(
-        'SELECT * FROM company where id=?', (id,)
-    ).fetchall()
-    jsonRes = {}
-    schema = CompanySchema()
-    for row in rows:
-        jsonRes = schema.dump(Company(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15]))
-    return json.dumps(jsonRes)
+    cur = get_db().cursor()
+    company = getCompanyByID(cur, id)
+    return CompanySchema().dump(company)
 
 
