@@ -1,5 +1,6 @@
 jerry.sqlite
 api.log
+/.venv
 
-jerry/__pycache__/
+jerrygit/__pycache__/
 jerry/pdf/__pycache__/
