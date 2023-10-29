@@ -77,6 +77,14 @@ def addInvoice(cur: Cursor, i: Invoice):
 def getOneInvoice(cur: Cursor, invoice_no: str, company_name: str):
     row = cur.execute('SELECT * FROM invoice where invoice_no = ? AND company_name = ?', (invoice_no, company_name)).fetchone()
     return Invoice(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16])
+
+def getAllInvoice(cur: Cursor, company_name: str):
+    rows = cur.execute('SELECT * FROM invoice where company_name = ?', (company_name,)).fetchall()
+    jsonres = []
+    schema = InvoiceSchema()
+    for row in rows:
+        jsonres.append(schema.dump(Invoice(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13], row[14], row[15], row[16])))
+    return json.dumps(jsonres)
     
     
 @bp.route('', methods=['POST'])
@@ -101,4 +109,10 @@ def addOne():
     cur.execute('COMMIT')
     return {'invoice_no': invoice_no}
 
-
+@bp.route('/', methods=['GET'])
+@cross_origin()
+@require_auth(None)
+def addAll():
+    cur = get_db().cursor()
+    company_name = request.args.get('company_name', default = '*', type = str)
+    return getAllInvoice(cur, company_name)

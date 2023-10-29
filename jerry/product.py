@@ -42,6 +42,7 @@ def getProductByID(cur: Cursor, id: int):
     return Product(row[0], row[1], row[2], row[3])
 
 @bp.route('', methods=['GET'])
+@cross_origin()
 @require_auth(None)
 def getAll():
     db = get_db().cursor()

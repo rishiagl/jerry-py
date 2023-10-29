@@ -40,6 +40,7 @@ validator = Auth0JWTBearerTokenValidator(
 require_auth.register_token_validator(validator)
 
 def addCustomer(cur: Cursor, c: Customer):
+    last_inserted_id = 0
     for row in cur.execute(
         'INSERT INTO customer(phone_no, name, address, state, pincode) VALUES (?, ?, ?, ?, ?)',
         (c.phone_no, c.name, c.address, c.state, c.pincode)):
@@ -52,6 +53,7 @@ def getCustomerByPhoneNo(cur: Cursor, phone_no: str):
     return Customer(row[0], row[1], row[2], row[3], row[4])
 
 @bp.route('', methods=['GET'])
+@cross_origin()
 @require_auth(None)
 def getAll():
     db = get_db().cursor()
