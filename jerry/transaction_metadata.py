@@ -1,12 +1,10 @@
 from .validator import Auth0JWTBearerTokenValidator
 from authlib.integrations.flask_oauth2 import ResourceProtector
-import json, os
+import os
 from sqlite3 import Cursor
-from flask import Blueprint, request
-from flask_cors import cross_origin
+from flask import Blueprint
 from marshmallow import Schema, fields
 
-from jerry.db import get_db
 
 
 class Transaction_metadataSchema(Schema):

@@ -1,10 +1,8 @@
-import json, os
+import os
 from sqlite3 import Cursor
-from flask import Blueprint, request
-from flask_cors import cross_origin
+from flask import Blueprint
 from marshmallow import Schema, fields
 
-from jerry.db import get_db
 
 
 class InvoiceProductSchema(Schema):

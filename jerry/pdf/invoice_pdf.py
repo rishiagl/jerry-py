@@ -1,14 +1,11 @@
-from reportlab.pdfgen import canvas
 import io
-from reportlab.lib.pagesizes import letter, A4
+from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Table, TableStyle
-from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
-from reportlab.graphics.shapes import Line, Drawing, colors
+from reportlab.graphics.shapes import colors
 from jerry.invoice import Invoice
 from jerry.company import Company
 from jerry.customer import Customer
-from jerry.invoice_product import InvoiceProduct
 
 
 def invoicePdf(invoice: Invoice, company: Company, customer: Customer, itemList: []):
@@ -227,5 +224,3 @@ def invoicePdf(invoice: Invoice, company: Company, customer: Customer, itemList:
     invPdf.build(pdf)
     buffer.seek(0)
     return buffer
-    filename = company.name
-    return FileResponse(buffer, as_attachment=True, filename=filename)

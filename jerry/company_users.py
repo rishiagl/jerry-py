@@ -1,5 +1,5 @@
 from sqlite3 import Cursor
-from flask import Blueprint, jsonify, request, g
+from flask import Blueprint, request
 from flask_cors import cross_origin
 from marshmallow import Schema, fields
 

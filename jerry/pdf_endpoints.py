@@ -1,12 +1,8 @@
-import json, os
-from sqlite3 import Cursor
+import os
 from flask import Blueprint, request, send_file
 from flask_cors import cross_origin
-from marshmallow import Schema, fields
-from jerry.transaction_metadata import getTransaction_metadata, updateTransaction_metadata
-from datetime import date
-from jerry.invoice_product import addInvoiceProduct, InvoiceProduct
-from jerry.invoice import getOneInvoice, Invoice, InvoiceSchema
+from jerry.invoice_product import InvoiceProduct
+from jerry.invoice import getOneInvoice, Invoice
 from jerry.company import Company, getCompanyByName
 from jerry.customer import Customer, getCustomerByPhoneNo
 from jerry.invoice_product import InvoiceProduct, getInvoiceProducts

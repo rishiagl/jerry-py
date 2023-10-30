@@ -1,4 +1,4 @@
-import json, os
+import json
 from urllib.request import urlopen
 
 from authlib.oauth2.rfc7523 import JWTBearerTokenValidator

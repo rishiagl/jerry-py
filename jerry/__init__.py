@@ -2,8 +2,8 @@ import logging
 import os
 import sys
 
-from dotenv import load_dotenv, find_dotenv
-from flask import Flask, jsonify,  g
+from dotenv import load_dotenv
+from flask import Flask
 
 from flask import has_request_context, request
 from flask.logging import default_handler
@@ -34,7 +34,7 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'jerry.sqlite'),
+        DATABASE=os.path.join(app.instance_path, os.getenv("SQLITE_DB_DEST")),
     )
 
     if test_config is None:

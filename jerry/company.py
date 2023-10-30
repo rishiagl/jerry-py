@@ -1,4 +1,4 @@
-import json, os
+import os
 from sqlite3 import Cursor
 from flask import Blueprint, request
 from flask_cors import cross_origin
