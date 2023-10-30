@@ -1,4 +1,4 @@
-import sqlite3
+import sqlite3, os
 import apsw
 
 import click
@@ -6,7 +6,7 @@ from flask import current_app, g
 
 def get_db():
     if 'db' not in g:
-        g.db = apsw.Connection("/home/rishi-debian/github.com/rishiagl/jerry-py/jerry/jerry.sqlite")
+        g.db = apsw.Connection(os.getenv("SQLITE_DB_DEST"))
 
     return g.db
 
@@ -16,20 +16,6 @@ def close_db(e=None):
 
     if db is not None:
         db.close()
-        
-def init_db():
-    db = get_db()
-
-    with current_app.open_resource('schema.sql') as f:
-        db.executescript(f.read().decode('utf8'))
-
-
-@click.command('init-db')
-def init_db_command():
-    """Clear the existing data and create new tables."""
-    init_db()
-    click.echo('Initialized the database.')
     
 def init_app(app):
     app.teardown_appcontext(close_db)
-    app.cli.add_command(init_db_command)

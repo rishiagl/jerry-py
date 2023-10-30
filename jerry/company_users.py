@@ -4,7 +4,7 @@ from flask_cors import cross_origin
 from marshmallow import Schema, fields
 
 from jerry.db import get_db
-import json
+import json, os
 
 
 import logging
@@ -33,8 +33,8 @@ from .validator import Auth0JWTBearerTokenValidator
 
 require_auth = ResourceProtector()
 validator = Auth0JWTBearerTokenValidator(
-    "project-jerry.us.auth0.com",
-    "http://127.0.0.1:5000"
+    os.getenv("AUTH0_PROJECT_URL"),
+    os.getenv("AUTH0_API_AUDIENCE")
 )
 require_auth.register_token_validator(validator)
 

@@ -1,6 +1,6 @@
 from .validator import Auth0JWTBearerTokenValidator
 from authlib.integrations.flask_oauth2 import ResourceProtector
-import json
+import json, os
 from sqlite3 import Cursor
 from flask import Blueprint, request
 from flask_cors import cross_origin
@@ -35,8 +35,8 @@ bp = Blueprint('transaction_metadata', __name__,
 
 require_auth = ResourceProtector()
 validator = Auth0JWTBearerTokenValidator(
-    "project-jerry.us.auth0.com",
-    "http://127.0.0.1:5000"
+    os.getenv("AUTH0_PROJECT_URL"),
+    os.getenv("AUTH0_API_AUDIENCE")
 )
 require_auth.register_token_validator(validator)
 

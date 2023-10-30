@@ -29,6 +29,7 @@ default_handler.setFormatter(formatter)
 
 def create_app(test_config=None):
     
+    load_dotenv()
     
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
@@ -57,12 +58,6 @@ def create_app(test_config=None):
     
     from . import db
     db.init_app(app)
-
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        app.logger.debug("kwebuyguy")
-        return 'Hello, World!'
     
     from . import company
     app.register_blueprint(company.bp)
@@ -82,5 +77,5 @@ def create_app(test_config=None):
     from . import pdf_endpoints
     app.register_blueprint(pdf_endpoints.bp)
     
-    CORS(app, origins=['http://localhost:5173',])
+    CORS(app, origins=[os.getenv("CORS_ORIGIN_1"), os.getenv("CORS_ORIGIN_2")])
     return app
