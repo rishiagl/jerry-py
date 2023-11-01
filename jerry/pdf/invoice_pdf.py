@@ -40,7 +40,7 @@ def invoicePdf(invoice: Invoice, company: Company, customer: Customer, itemList:
         [company.legal_name],
         [company.address],
         ["" + company.city + ', ' + company.state + ' - ' + company.pincode],
-        ['Email-No: ' + company.email + ', Phone No: ' + company.phone_no],
+        ['Email: ' + company.email + ', Phone No: ' + company.phone_no],
         [company.website],
         ['GSTN: ' + company.gstn]]
     company_table = Table(company_data, colWidths=1*[width], rowHeights=[
@@ -106,7 +106,7 @@ def invoicePdf(invoice: Invoice, company: Company, customer: Customer, itemList:
     pdf.append(productDataTable)
     # ///////////////Paid and Due//////////////
     paymentDetail = [["Paid:", invoice.amount_paid,
-                      "Due", invoice.amount - invoice.amount_paid]]
+                      "Due:", invoice.amount - invoice.amount_paid]]
     paymentDetailTable = Table(paymentDetail, colWidths=[width*1/10, width*2/10, width*1/10, width*2/10], rowHeights=[
                                1/3*inch], hAlign='LEFT', vAlign='TOP', spaceAfter=8, cornerRadii=[5, 5, 5, 5])
     paymentDetailTable.setStyle(TableStyle([('FONTNAME', (0, 0), (-1, -1), 'Helvetica-Bold'),
